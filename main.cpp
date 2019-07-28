@@ -1,12 +1,15 @@
+#include <cmath>
 #include <iostream>
+#include <limits>
+#include <cstdio>
 extern "C"{
 #include <SDL.h>
-#include <stdio.h>
+
 }
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
-
+int i = 0;
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
@@ -17,7 +20,7 @@ int main() {
         return 1;
     }
     window = SDL_CreateWindow(
-            "hello_sdl2",
+            "Colors",
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
             SCREEN_WIDTH, SCREEN_HEIGHT,
             SDL_WINDOW_SHOWN
@@ -26,7 +29,9 @@ int main() {
         fprintf(stderr, "could not create window: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Renderer *ren = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_Renderer *ren = SDL_CreateRenderer(window,
+            -1,
+            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     SDL_Event e;
 
     while(true){
@@ -34,9 +39,17 @@ int main() {
         if (SDL_QUIT == e.type){
             break;
         }
+
+        SDL_SetRenderDrawColor(ren,
+                abs(sin((i*0.01)     ) * UINT8_MAX),
+                abs(sin((i*0.01) + 10) * UINT8_MAX),
+                abs(sin((i*0.01) + 5 ) * UINT8_MAX),
+                255);
         SDL_RenderClear(ren);
         SDL_RenderPresent(ren);
-                SDL_Delay(5);
+        SDL_Delay(5);
+        i++;
+
     }
     SDL_DestroyRenderer(ren);
     SDL_DestroyWindow(window);
