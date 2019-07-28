@@ -3,17 +3,31 @@ project(packme)
 
 set(CMAKE_CXX_STANDARD 14)
 find_package(SDL2 REQUIRED)
-add_executable(packme main.cpp)
+
+add_executable(packme main.cpp packme.icns)
+
+
 target_link_libraries(packme PRIVATE SDL2::SDL2)
 
 install(TARGETS packme
         BUNDLE
-            DESTINATION bin
+            DESTINATION .
+        RESOURCE
+            DESTINATION $<TARGET_BUNDLE_CONTENT_DIR:packme>/Resources
         )
 
 if(CMAKE_MACOSX_BUNDLE)
+    set_target_properties(packme PROPERTIES
+            MACOSX_BUNDLE_ICON_FILE packme.icns
+            RESOURCE packme.icns
+            )
+    set_source_files_properties(packme.icns PROPERTIES
+            MACOSX_PACKAGE_LOCATION Resources)
+
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle($<TARGET_BUNDLE_DIR:packme> \"\" \"\")
+        copy_and_fixup_bundle($<TARGET_BUNDLE_DIR:packme> \${CMAKE_INSTALL_PREFIX}/packme.app \"\" \"\")
     ")
+
 endif()
+include(cmake/CMakeCPack.cmake)
