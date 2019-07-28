@@ -27,10 +27,10 @@ if(CMAKE_MACOSX_BUNDLE)
             MACOSX_PACKAGE_LOCATION Resources
         )
 
-    install(CODE "
+    install(CODE [[
             include(BundleUtilities)
-            copy_and_fixup_bundle($<TARGET_BUNDLE_DIR:packme> \${CMAKE_INSTALL_PREFIX}/packme.app \"\" \"\")
-        ")
+            copy_and_fixup_bundle($<TARGET_BUNDLE_DIR:packme> ${CMAKE_INSTALL_PREFIX}/packme.app "" "")
+        ]])
 
 endif()
 
